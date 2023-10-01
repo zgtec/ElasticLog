@@ -1,0 +1,47 @@
+{
+    "name": "zgtec/elasticlog",
+    "description": "ElasticSearch Log for Laravel",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Volodymyr Dubyna",
+            "email": "volodymyr@dubyna.com",
+            "homepage": "http://www.zgtec.com"
+        }
+    ],
+    "homepage": "https://github.com/zgtec/elasticlog",
+    "keywords": ["Laravel", "ElasticLog"],
+    "require": {
+        "elasticsearch/elasticsearch": "^8.7",
+        "opensearch-project/opensearch-php": "2.1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~9.0",
+        "orchestra/testbench": "~7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zgtec\\ElasticLog\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Zgtec\\ElasticLog\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Zgtec\\ElasticLog\\ElasticLogServiceProvider"
+            ],
+            "aliases": {
+                "ElasticLog": "Zgtec\\ElasticLog\\Facades\\ElasticLog"
+            }
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}
