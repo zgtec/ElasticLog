@@ -12,6 +12,7 @@
     "homepage": "https://github.com/zgtec/elasticlog",
     "keywords": ["Laravel", "ElasticLog"],
     "require": {
+        "php": "^8.2",
         "elasticsearch/elasticsearch": "^8.7",
         "opensearch-project/opensearch-php": "2.1.0"
     },

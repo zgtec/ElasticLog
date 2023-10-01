@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Zgtec\ElasticLog\Models\ElasticSearch;
 
+use Illuminate\Support\Collection;
+
 class ElasticSearch
 {
     protected $client;
