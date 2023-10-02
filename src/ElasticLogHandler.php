@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Zgtec\ElasticLog\Models\ElasticLog;
+namespace Zgtec\ElasticLog;
 
 use Illuminate\Support\Arr;
 use Monolog\Handler\ElasticsearchHandler;
@@ -9,7 +9,7 @@ use Monolog\LogRecord;
 
 class ElasticLogHandler extends ElasticsearchHandler
 {
-    protected function write(LogRecord $record): void
+    protected function write(LogRecord|array $record): void
     {
         $formatted = $record->formatted;
         ElasticLog::create([

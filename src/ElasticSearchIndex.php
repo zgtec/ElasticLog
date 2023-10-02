@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Zgtec\ElasticLog\Models\ElasticSearch;
+namespace Zgtec\ElasticLog;
 
 use Illuminate\Support\Collection;
+use Zgtec\ElasticLog\Facades\ElasticSearchClient;
 
-class ElasticSearch
+class ElasticSearchIndex
 {
     protected $client;
     protected $indexName = 'elastic';
@@ -25,7 +26,7 @@ class ElasticSearch
 
     public function getIndexName(string $suffix = ''): string
     {
-        return strtolower(env('ELASTIC_PREFIX', '') . $this->indexName . $suffix);
+        return strtolower(config('elasticlog.elasticsearch.prefix') . $this->indexName . $suffix);
     }
 
     public function index(array $data)
@@ -90,7 +91,7 @@ class ElasticSearch
                     'settings' => [
                         'number_of_shards' => 1,
                         'number_of_replicas' => 0,
-                        'index.lifecycle.name' => env('ELASTIC_LIFECYCLE', '180-days-default',),
+                        'index.lifecycle.name' => config('elasticlog.elasticsearch.lifecycle'),
                         'index.lifecycle.rollover_alias' => $this->getIndexName()
                     ]
                 ]

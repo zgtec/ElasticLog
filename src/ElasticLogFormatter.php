@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Zgtec\ElasticLog\Models\ElasticLog;
+namespace Zgtec\ElasticLog;
 
 use Monolog\Formatter\ElasticsearchFormatter;
 

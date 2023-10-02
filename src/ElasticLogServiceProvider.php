@@ -3,13 +3,9 @@ declare(strict_types=1);
 
 namespace Zgtec\ElasticLog;
 
-use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use Zgtec\ElasticLog\Facades\ElasticLog as ElasticLogFacade;
-use Zgtec\ElasticLog\Models\ElasticLog\ElasticLog;
-use Zgtec\ElasticLog\Models\ElasticLog\ElasticLogFormatter;
-use Zgtec\ElasticLog\Models\ElasticLog\ElasticLogHandler;
-use Zgtec\ElasticLog\Models\ElasticSearch\ElasticSearchClient;
+use Zgtec\ElasticLog\Facades\ElasticSearchClient;
 
 class ElasticLogServiceProvider extends ServiceProvider
 {
@@ -24,6 +20,9 @@ class ElasticLogServiceProvider extends ServiceProvider
             return ElasticSearchClient::buildClient();
         });
         $this->app->alias('ElasticSearchClient', ElasticSearchClient::class);
+
+        $this->app->alias('ElasticLog', ElasticLogFacade::class);
+
 
         $this->app->bind(ElasticLogFormatter::class, function () {
             return new ElasticLogFormatter(ElasticLog::INDEX, ElasticLog::TYPE);
@@ -45,9 +44,6 @@ class ElasticLogServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/elasticlog.php', 'elasticlog');
-
-        $loader = AliasLoader::getInstance();
-        $loader->alias('ElasticLog', ElasticLogFacade::class);
     }
 
     /**
@@ -57,7 +53,7 @@ class ElasticLogServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['elasticlog'];
+        return ['ElasticLog'];
     }
 
     /**
@@ -68,8 +64,6 @@ class ElasticLogServiceProvider extends ServiceProvider
     protected function bootForConsole(): void
     {
         // Publishing the configuration file.
-        $this->publishes([
-            __DIR__.'/../config/elasticlog.php' => config_path('elasticlog.php'),
-        ], 'elasticlog.config');
+        $this->publishes([__DIR__.'/../config/elasticlog.php' => config_path('elasticlog.php')], 'elasticlog.config');
     }
 }

@@ -1,14 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Zgtec\ElasticLog\Models\ElasticLog;
+namespace Zgtec\ElasticLog;
 
 use Illuminate\Support\Collection;
-use Zgtec\ElasticLog\Models\ElasticSearch\ElasticSearch;
 
 class ElasticLog
 {
-    protected $elastic;
+    protected $elasticSearch;
     const INDEX = 'log-elastic';
     const TYPE = '_doc';
     const MAPPINGS = [
@@ -19,6 +18,11 @@ class ElasticLog
             ],
         ]
     ];
+
+    public function __construct() {
+        $this->elasticSearch = new ElasticSearchIndex(self::INDEX, self::MAPPINGS);
+    }
+
 
     public function search(array $data = []): array
     {
@@ -59,8 +63,6 @@ class ElasticLog
 
         }
 
-        $es = new ElasticSearch(self::INDEX, self::MAPPINGS);
-
         $bool = ['filter' => $filter];
 
 
@@ -68,7 +70,7 @@ class ElasticLog
             $bool['should'] = $should;
             $bool['minimum_should_match'] = 1;
         }
-        $es->search(
+        $this->elasticSearch->search(
             [
                 'query' => ['bool' => $bool],
                 'sort' => array_values($sort ?? []),
@@ -78,16 +80,14 @@ class ElasticLog
         );
         return [
             "draw" => (int)($data['draw'] ?? 1),
-            "recordsTotal" => $es->getTotalRecords(),
-            "recordsFiltered" => $es->getTotalRecords(),
-            "data" => $es->getHitsCollection()
+            "recordsTotal" => $this->elasticSearch->getTotalRecords(),
+            "recordsFiltered" => $this->elasticSearch->getTotalRecords(),
+            "data" => $this->elasticSearch->getHitsCollection()
         ];
     }
 
     public function uniqueValues(string $field, int $limit = 100, array $where = []): Collection
     {
-        $es = new ElasticSearch(self::INDEX, self::MAPPINGS);
-
         $filter = [
             ['exists' => ['field' => 'logging_time']]
         ];
@@ -108,21 +108,17 @@ class ElasticLog
                 ],
             ],
         ];
-        return collect($es->search($data)->getUniqueTerms($field));
+        return collect($this->elasticSearch->search($data)->getUniqueTerms($field));
     }
 
     public function create(array $data): bool
     {
-        $es = new ElasticSearch(self::INDEX, self::MAPPINGS);
-        $response = $es->index($data);
-        lad('ElasticResponse', $response);
-        lad('ElasticLog', $data);
+        $response = $this->elasticSearch->index($data);
         return ($response['result'] ?? '') === 'created';
     }
     public function truncate()
     {
-        $es = new ElasticSearch(self::INDEX, self::MAPPINGS);
-        $es->deleteIndex();
+        $this->elasticSearch->deleteIndex();
     }
 
 
