@@ -6,6 +6,7 @@ namespace Zgtec\ElasticLog;
 use Illuminate\Support\Arr;
 use Monolog\Handler\ElasticsearchHandler;
 use Monolog\LogRecord;
+use Zgtec\ElasticLog\Facades\ElasticLog;
 
 class ElasticLogHandler extends ElasticsearchHandler
 {
