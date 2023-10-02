@@ -1,6 +1,6 @@
 {
-    "name": "zgtec/elasticlog",
-    "description": "ElasticSearch Log for Laravel",
+    "name": "zgtec/laravel-elastic-log",
+    "description": "Laravel ElasticSearch Client and ElasticLog handler",
     "license": "MIT",
     "authors": [
         {
