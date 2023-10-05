@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+use Illuminate\Support\Str;
+
 return [
     'opensearch' => env('ELASTIC_OPENSEARCH', false),
     'ssl' => [
@@ -18,7 +20,7 @@ return [
         'host' => env('ELASTIC_HOST'),
         'user' => env('ELASTIC_USER'),
         'password' => env('ELASTIC_PASSWORD'),
-        'prefix' => env('ELASTIC_PREFIX', ''),
+        'prefix' => Str::slug(env('ELASTIC_PREFIX', '')),
         'lifecycle' => env('ELASTIC_LIFECYCLE', '180-days-default',),
     ],
 
