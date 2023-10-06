@@ -113,6 +113,6 @@ class ElasticSearchIndex
 
     public function deleteIndex()
     {
-        ElasticSearchClient::indices()->delete(['index' => $this->getIndexName()]);
+        ElasticSearchClient::indices()->deleteAlias(['name' => $this->getIndexName(), 'index'=>'_all']);
     }
 }
