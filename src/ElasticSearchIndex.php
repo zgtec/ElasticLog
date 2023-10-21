@@ -16,12 +16,8 @@ class ElasticSearchIndex
     {
         $this->indexName = $indexName;
         if (!$this->isIndexExists()) {
-            $this->createIndex();
+            $this->createIndex($mappings);
         }
-        ElasticSearchClient::indices()->putMapping([
-            'index' => $this->getIndexName(),
-            'body' => $mappings
-        ]);
     }
 
     public function getIndexName(string $suffix = ''): string
@@ -80,7 +76,7 @@ class ElasticSearchIndex
         return is_bool($result) ? $result : ($result->getStatusCode() === 200);
     }
 
-    public function createIndex(): void
+    public function createIndex(array $mappings): void
     {
         ElasticSearchClient::indices()->putIndexTemplate([
             'name' => $this->getIndexName(),
@@ -93,7 +89,8 @@ class ElasticSearchIndex
                         'number_of_replicas' => 0,
                         'index.lifecycle.name' => config('elasticlog.elasticsearch.lifecycle'),
                         'index.lifecycle.rollover_alias' => $this->getIndexName()
-                    ]
+                    ],
+                    'mappings' => $mappings
                 ]
             ]
         ]);
